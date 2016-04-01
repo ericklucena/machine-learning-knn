@@ -13,25 +13,22 @@ int main(int argc, char** argv)
 	sscanf(argv[2], "%d", &tAttr);
 	sscanf(argv[3], "%d", &nElem);
 
-	printf("%d\n", nElem);
-
-	set = newKnnSet(nElem);
+	set = newKnnSet(nElem, nAttr);
 
 	for (i=0; i < nElem; i++)
 	{
-		set->elements[i] = newKnnElement(nAttr);
+		KnnElement *elem;
+		elem = newKnnElement(nAttr);
 		for (j=0; j < nAttr; j++)
 		{
-			fscanf(stdin, "%lf", &(set->elements[i]->attributes[j]));
+			fscanf(stdin, "%lf", &(elem->attributes[j]));
 		}
+		addKnnElement(set, elem, i);
 	}
 
-	for (i=0; i < nElem; i++)
-	{
-		printKnnElement(set->elements[i]);
-	}
+	normalizeSet(set);
 
-	printf("Distance: %lf\n", distance(set->elements[0], set->elements[1], tAttr));
+	printf("Distance: %lf\n", distance(set->elements[0], set->elements[nElem-1], tAttr));
 
 	return 0;
 }
