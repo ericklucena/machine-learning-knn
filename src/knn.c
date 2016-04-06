@@ -177,9 +177,9 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k)
 	for (i = 0; i < k; i++)
 	{
 		neighbours[i] = i;
-		if (distance(knnElement, set->elements[i], set->attributes) > greaterDistance)
+		if (distance(knnElement, set->elements[i], set->attributes-set->classes) > greaterDistance)
 		{
-			greaterDistance = distance(knnElement, set->elements[i], set->attributes);
+			greaterDistance = distance(knnElement, set->elements[i], set->attributes-set->classes);
 			farest = i;
 		}
 
@@ -193,16 +193,16 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k)
 
 	for (j = k+1; j < set->size; j++)
 	{
-		if (distance(knnElement, set->elements[j], set->attributes) < greaterDistance)
+		if (distance(knnElement, set->elements[j], set->attributes-set->classes) < greaterDistance)
 		{
 			neighbours[farest] = j;
-			greaterDistance = distance(knnElement, set->elements[j], set->attributes);
+			greaterDistance = distance(knnElement, set->elements[j], set->attributes-set->classes);
 
 			for (i = 0; i < k; i++)
 			{
-				if (distance(knnElement, set->elements[neighbours[i]], set->attributes) > greaterDistance)
+				if (distance(knnElement, set->elements[neighbours[i]], set->attributes-set->classes) > greaterDistance)
 				{
-					greaterDistance = distance(knnElement, set->elements[neighbours[i]], set->attributes);
+					greaterDistance = distance(knnElement, set->elements[neighbours[i]], set->attributes-set->classes);
 					farest = i;
 				}
 			}
@@ -216,6 +216,7 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k)
 	}
 
 	printf("%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, set->classes));
+	//printf("%d\t%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, set->classes), classes[higherIndex(classes, set->classes)]);
 }
 
 void printKnnSet(KnnSet *set)
