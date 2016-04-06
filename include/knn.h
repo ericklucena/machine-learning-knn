@@ -1,6 +1,8 @@
 #ifndef ELPS_KNN_H_
 #define ELPS_KNN_H_
 
+#include <stdbool.h>
+
 typedef struct knnElement
 {
 	int size;
@@ -32,6 +34,6 @@ void addKnnElement(KnnSet *set, KnnElement *element, int pos);
 void normalizeSet(KnnSet *set);
 void printKnnSet(KnnSet *set);
 
-void printClasses(KnnSet *set, KnnElement *knnElement, int k);
+void printClasses(KnnSet *set, KnnElement *knnElement, int k, bool weight);
 
 #endif

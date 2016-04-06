@@ -1,6 +1,7 @@
 #include "knn.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include <float.h>
 
@@ -166,7 +167,7 @@ void normalizeSet(KnnSet *set)
 	}
 }
 
-void printClasses(KnnSet *set, KnnElement *knnElement, int k)
+void printClasses(KnnSet *set, KnnElement *knnElement, int k, bool weight)
 {
 	int i, j;
 	int neighbours[k];
@@ -212,7 +213,14 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k)
 	for (i = 0; i < k; i++)
 	{
 		//printKnnElement(set->elements[neighbours[i]]);
-		classes[getKnnElementClass(set->elements[neighbours[i]])]++;
+		if (weight)
+		{
+			classes[getKnnElementClass(set->elements[neighbours[i]])] += 1.0/distance(knnElement, set->elements[neighbours[i]], set->attributes-set->classes);
+		}
+		else
+		{
+			classes[getKnnElementClass(set->elements[neighbours[i]])]++;
+		}
 	}
 
 	printf("%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, set->classes));

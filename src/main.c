@@ -9,6 +9,7 @@ int main(int argc, char** argv)
 	int nTest;
 	int nNeighbours;
 	int i, j;
+	int weight;
 	KnnSet *set;
 	KnnSet *training;
 	KnnSet *test;
@@ -18,6 +19,7 @@ int main(int argc, char** argv)
 	sscanf(argv[3], "%d", &nElem);
 	sscanf(argv[4], "%d", &nTest);
 	sscanf(argv[5], "%d", &nNeighbours);
+	sscanf(argv[6], "%d", &weight);
 
 	set = newKnnSet(nElem, nAttr, nClass);
 	training = newKnnSet(nElem - nTest, nAttr, nClass);
@@ -49,7 +51,7 @@ int main(int argc, char** argv)
 
 	for (i = 0; i < test->size; i++)
 	{
-		printClasses(training, test->elements[i], nNeighbours);
+		printClasses(training, test->elements[i], nNeighbours, weight);
 	}
 
 	return 0;
