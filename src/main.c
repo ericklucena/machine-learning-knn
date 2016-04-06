@@ -6,18 +6,24 @@ int main(int argc, char** argv)
 	int nAttr;
 	int nClass;
 	int nElem;
+	int nTest;
 	int nNeighbours;
 	int i, j;
 	KnnSet *set;
+	KnnSet *training;
+	KnnSet *test;
 
 	sscanf(argv[1], "%d", &nAttr);
 	sscanf(argv[2], "%d", &nClass);
 	sscanf(argv[3], "%d", &nElem);
-	sscanf(argv[4], "%d", &nNeighbours);
+	sscanf(argv[4], "%d", &nTest);
+	sscanf(argv[5], "%d", &nNeighbours);
 
 	set = newKnnSet(nElem, nAttr, nClass);
+	training = newKnnSet(nElem - nTest, nAttr, nClass);
+	test = newKnnSet(nTest, nAttr, nClass);
 
-	for (i=0; i < nElem; i++)
+	for (i=0; i < set->size; i++)
 	{
 		KnnElement *elem;
 		elem = newKnnElement(nAttr, nClass);
@@ -27,12 +33,23 @@ int main(int argc, char** argv)
 		}
 		addKnnElement(set, elem, i);
 	}
-
 	normalizeSet(set);
 
-	for (i = 0; i < set->size; i++)
+	for (i=0; i < set->size; i++)
 	{
-		printClassesByIndex(set, i, nNeighbours);
+		if (i < training->size)
+		{
+			addKnnElement(training, set->elements[i], i);
+		}
+		else
+		{
+			addKnnElement(test, set->elements[i], i-training->size);
+		}
+	}
+
+	for (i = 0; i < test->size; i++)
+	{
+		printClasses(training, test->elements[i], nNeighbours);
 	}
 
 	return 0;

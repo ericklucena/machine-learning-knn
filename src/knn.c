@@ -171,10 +171,18 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k)
 	int i, j;
 	int neighbours[k];
 	int classes[set->classes];
+	int farest=0;
+	double greaterDistance=0;
 
 	for (i = 0; i < k; i++)
 	{
 		neighbours[i] = i;
+		if (distance(knnElement, set->elements[i], set->attributes) > greaterDistance)
+		{
+			greaterDistance = distance(knnElement, set->elements[i], set->attributes);
+			farest = i;
+		}
+
 	}
 
 	for (i = 0; i < set->classes; i++)
@@ -185,68 +193,29 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k)
 
 	for (j = k+1; j < set->size; j++)
 	{
-		for (i = 0; i < k; i++)
+		if (distance(knnElement, set->elements[j], set->attributes) < greaterDistance)
 		{
-			if (distance(knnElement, set->elements[j], set->attributes) < distance(knnElement, set->elements[neighbours[i]], set->attributes))
-			{
-				neighbours[i] = j;
-				break;
-			}
+			neighbours[farest] = j;
+			greaterDistance = distance(knnElement, set->elements[j], set->attributes);
 
+			for (i = 0; i < k; i++)
+			{
+				if (distance(knnElement, set->elements[neighbours[i]], set->attributes) > greaterDistance)
+				{
+					greaterDistance = distance(knnElement, set->elements[neighbours[i]], set->attributes);
+					farest = i;
+				}
+			}
 		}
 	}
 
 	for (i = 0; i < k; i++)
 	{
+		//printKnnElement(set->elements[neighbours[i]]);
 		classes[getKnnElementClass(set->elements[neighbours[i]])]++;
 	}
 
-	printf("%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, k));
-}
-
-void printClassesByIndex(KnnSet *set, int index, int k)
-{
-	int i, j;
-	int neighbours[k];
-	int classes[set->classes];
-
-	for (i = 0, j = 0; i < k; i++)
-	{
-		if (i==index) // Skip if index is among the first k elements
-		{
-			j++;
-		}
-		neighbours[i] = i+j;
-	}
-
-	for (i = 0; i < set->classes; i++)
-	{
-		classes[i] = 0;
-	}
-
-	for (j += k+1; j < set->size; j++)
-	{
-		if (j==index)
-		{
-			continue;
-		}
-		for (i = 0; i < k; i++)
-		{
-			if (distance(set->elements[index], set->elements[j], set->attributes) < distance(set->elements[index], set->elements[neighbours[i]], set->attributes))
-			{
-				neighbours[i] = j;
-				break;
-			}
-
-		}
-	}
-
-	for (i = 0; i < k; i++)
-	{
-		classes[getKnnElementClass(set->elements[neighbours[i]])]++;
-	}
-
-	printf("%d\t%d\n", getKnnElementClass(set->elements[index]), higherIndex(classes, set->classes));
+	printf("%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, set->classes));
 }
 
 void printKnnSet(KnnSet *set)

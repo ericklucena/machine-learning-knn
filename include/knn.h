@@ -33,6 +33,5 @@ void normalizeSet(KnnSet *set);
 void printKnnSet(KnnSet *set);
 
 void printClasses(KnnSet *set, KnnElement *knnElement, int k);
-void printClassesByIndex(KnnSet *set, int index, int k);
 
 #endif
