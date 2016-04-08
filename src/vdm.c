@@ -7,6 +7,24 @@
 
 // Private functions
 
+int higherIndex(double *array, int size)
+{
+	int i;
+	int index=0;
+	double count = array[0];
+	
+	for (i = 1; i < size; i++)
+	{
+		if (array[i] > count)
+		{
+			index = i;
+			count = array[i];
+		}
+	}
+
+	return index;
+}
+
 void clearMinMax(VdmSet *set)
 {
 	int i;
@@ -18,6 +36,32 @@ void clearMinMax(VdmSet *set)
 	}
 }
 
+double innerVdm(VdmSet *set, int index, VdmElement *element, int attribute)
+{
+	int i;
+	double sum = 0;
+
+	for (i = 0; i < set->classes; i++)
+	{
+		sum += set->probability[i][attribute][set->elements[index]->attributes[attribute]] 
+				- set->probability[i][attribute][element->attributes[attribute]];
+	}
+
+	return fabs(sum);
+}
+
+double vdm(VdmSet *set, int index, VdmElement *element)
+{
+	int i;
+	double sum = 0;
+
+	for (i = 0; i < set->attributes; i++)
+	{
+		sum += innerVdm(set, index, element, i);
+	}
+
+	return sqrt(sum);
+}
 
 // Public functions
 
@@ -186,7 +230,7 @@ void vdmPrintClasses(VdmSet *set, VdmElement *vdmElement, int k, bool weight)
 {
 	int i, j;
 	int neighbours[k];
-	int classes[set->classes];
+	double classes[set->classes];
 	int farest=0;
 	double greaterDistance=0;
 
@@ -238,7 +282,7 @@ void vdmPrintClasses(VdmSet *set, VdmElement *vdmElement, int k, bool weight)
 		}
 	}
 
-	//printf("%d\t%d\n", getVdmElementClass(vdmElement), higherIndex(classes, set->classes));
+	printf("%d\t%d\n", getVdmElementClass(vdmElement), higherIndex(classes, set->classes));
 	//printf("%d\t%d\t%d\n", getVdmElementClass(vdmElement), higherIndex(classes, set->classes), classes[higherIndex(classes, set->classes)]);
 }
 
