@@ -26,8 +26,7 @@ void freeKnnElement(KnnElement *elem);
 void printKnnElement(KnnElement *elem);
 int  getKnnElementClass(KnnElement *elem);
 
-double distanceAll(KnnElement *elemA, KnnElement *elemB);
-double distance(KnnElement *elemA, KnnElement *elemB, int attrLen);
+double distance(KnnElement *elemA, KnnElement *elemB);
 
 KnnSet* newKnnSet(int size, int attributes, int classes);
 void freeKnnSet(KnnSet *set);
