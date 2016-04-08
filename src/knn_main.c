@@ -33,6 +33,7 @@ int main(int argc, char** argv)
 		{
 			fscanf(stdin, "%lf", &(elem->attributes[j]));
 		}
+		fscanf(stdin, "%d", &(elem->class));
 		addKnnElement(set, elem, i);
 	}
 	normalizeSet(set);

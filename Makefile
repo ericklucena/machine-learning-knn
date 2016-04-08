@@ -3,7 +3,7 @@ CPPFLAGS=
 CFLAGS= -std=c99 -Wall -pedantic -Iinclude -lm -g
 LDFLAGS=
 
-all: src/*.c
+all: src/knn.c src/knn_main.c
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o bin/knn
 
 clean: 

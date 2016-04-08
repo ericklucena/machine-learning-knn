@@ -7,6 +7,7 @@ typedef struct knnElement
 {
 	int size;
 	int classes;
+	int class;
 	double *attributes;
 } KnnElement;
 

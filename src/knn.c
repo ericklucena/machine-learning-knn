@@ -62,23 +62,6 @@ void printKnnElement(KnnElement *elem)
 	printf("\n");
 }
 
-int  getKnnElementClass(KnnElement *elem)
-{
-	int i, shift;
-
-	shift = elem->size - elem->classes;
-
-	for (i = 0; i < elem->classes; i++)
-	{
-		if (elem->attributes[shift + i] >= 1)
-		{
-			break;
-		}
-	}
-
-	return i;
-}
-
 double distanceAll(KnnElement *elemA, KnnElement *elemB)
 {
 	return distance(elemA, elemB, elemA->size);
@@ -215,15 +198,15 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k, bool weight)
 		//printKnnElement(set->elements[neighbours[i]]);
 		if (weight)
 		{
-			classes[getKnnElementClass(set->elements[neighbours[i]])] += 1.0/distance(knnElement, set->elements[neighbours[i]], set->attributes-set->classes);
+			classes[set->elements[neighbours[i]]->class] += 1.0/distance(knnElement, set->elements[neighbours[i]], set->attributes-set->classes);
 		}
 		else
 		{
-			classes[getKnnElementClass(set->elements[neighbours[i]])]++;
+			classes[set->elements[neighbours[i]]->class]++;
 		}
 	}
 
-	printf("%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, set->classes));
+	printf("%d\t%d\n", knnElement->class, higherIndex(classes, set->classes));
 	//printf("%d\t%d\t%d\n", getKnnElementClass(knnElement), higherIndex(classes, set->classes), classes[higherIndex(classes, set->classes)]);
 }
 
