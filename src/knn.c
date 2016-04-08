@@ -13,7 +13,7 @@ double euclidianDistance(double x, double y)
 	return isnan(distance)?0:distance>0?distance:distance*(-1);
 }
 
-int higherIndex(int *array, int size)
+int higherIndex(double *array, int size)
 {
 	int i;
 	int index=0;
@@ -171,7 +171,7 @@ void printClasses(KnnSet *set, KnnElement *knnElement, int k, bool weight)
 {
 	int i, j;
 	int neighbours[k];
-	int classes[set->classes];
+	double classes[set->classes];
 	int farest=0;
 	double greaterDistance=0;
 
