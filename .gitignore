@@ -1,3 +1,4 @@
 bin/knn*
+bin/vdm*
 *.o
 
