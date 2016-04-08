@@ -28,7 +28,7 @@ void freeVdmElement(VdmElement *elem);
 void printVdmElement(VdmElement *elem);
 int  getVdmElementClass(VdmElement *elem);
 
-double vdmDistance(VdmElement *elemA, VdmElement *elemB, int attrLen);
+double vdmDistance(VdmSet *set, int index, VdmElement *element);
 
 VdmSet* newVdmSet(int size, int attributes, int classes);
 void freeVdmSet(VdmSet *set);

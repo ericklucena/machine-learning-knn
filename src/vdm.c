@@ -50,7 +50,7 @@ double innerVdm(VdmSet *set, int index, VdmElement *element, int attribute)
 	return fabs(sum);
 }
 
-double vdm(VdmSet *set, int index, VdmElement *element)
+double vdmDistance(VdmSet *set, int index, VdmElement *element)
 {
 	int i;
 	double sum = 0;
@@ -99,12 +99,6 @@ int  getVdmElementClass(VdmElement *elem)
 	return elem->attributes[elem->size-1];
 }
 
-double vdmDistance(VdmElement *elemA, VdmElement *elemB, int attrLen)
-{
-	// TODO
-	return 0.0;
-}
-
 VdmSet* newVdmSet(int size, int attributes, int classes)
 {
 	VdmSet *set;
@@ -127,7 +121,7 @@ double*** newProbabilityMatrix(int classes, int attributes, int* attributesSizes
 	int i, j;
 	double ***matrix;
 
-	matrix = malloc(sizeof(double**)*classes);
+	matrix = calloc(sizeof(double**), classes);
 	for (i = 0; i < classes; i++)
 	{
 		matrix[i] = calloc(sizeof(double*), attributes);
@@ -186,10 +180,12 @@ void addVdmElement(VdmSet *set, VdmElement *element, int pos)
 void calculateProbability(VdmSet *set)
 {
 	int i, j, k;
-	int attributesSizes[set->attributes];
+	int *attributesSizes;
 	double ***probability;
 	int **quantity;
 	VdmElement *element;
+
+	attributesSizes = calloc(sizeof(int), set->attributes);
 
 	for (i = 0; i < set->attributes; i++)
 	{
@@ -231,16 +227,16 @@ void vdmPrintClasses(VdmSet *set, VdmElement *vdmElement, int k, bool weight)
 	int i, j;
 	int neighbours[k];
 	double classes[set->classes];
-	int farest=0;
+	int farthest=0;
 	double greaterDistance=0;
 
 	for (i = 0; i < k; i++)
 	{
 		neighbours[i] = i;
-		if (vdmDistance(vdmElement, set->elements[i], set->attributes-set->classes) > greaterDistance)
+		if (vdmDistance(set, i, vdmElement) > greaterDistance)
 		{
-			greaterDistance = vdmDistance(vdmElement, set->elements[i], set->attributes-set->classes);
-			farest = i;
+			greaterDistance = vdmDistance(set, i, vdmElement);
+			farthest = i;
 		}
 
 	}
@@ -253,17 +249,17 @@ void vdmPrintClasses(VdmSet *set, VdmElement *vdmElement, int k, bool weight)
 
 	for (j = k+1; j < set->size; j++)
 	{
-		if (vdmDistance(vdmElement, set->elements[j], set->attributes-set->classes) < greaterDistance)
+		if (vdmDistance(set, j, vdmElement) < greaterDistance)
 		{
-			neighbours[farest] = j;
-			greaterDistance = vdmDistance(vdmElement, set->elements[j], set->attributes-set->classes);
+			neighbours[farthest] = j;
+			greaterDistance = vdmDistance(set, j, vdmElement);
 
 			for (i = 0; i < k; i++)
 			{
-				if (vdmDistance(vdmElement, set->elements[neighbours[i]], set->attributes-set->classes) > greaterDistance)
+				if (vdmDistance(set, neighbours[i], vdmElement) > greaterDistance)
 				{
-					greaterDistance = vdmDistance(vdmElement, set->elements[neighbours[i]], set->attributes-set->classes);
-					farest = i;
+					greaterDistance = vdmDistance(set, neighbours[i], vdmElement);
+					farthest = i;
 				}
 			}
 		}
@@ -274,15 +270,15 @@ void vdmPrintClasses(VdmSet *set, VdmElement *vdmElement, int k, bool weight)
 		//printVdmElement(set->elements[neighbours[i]]);
 		if (weight)
 		{
-			classes[getVdmElementClass(set->elements[neighbours[i]])] += 1.0/vdmDistance(vdmElement, set->elements[neighbours[i]], set->attributes-set->classes);
+			classes[set->elements[neighbours[i]]->class] += 1.0/vdmDistance(set, neighbours[i], vdmElement);
 		}
 		else
 		{
-			classes[getVdmElementClass(set->elements[neighbours[i]])]++;
+			classes[set->elements[neighbours[i]]->class]++;
 		}
 	}
 
-	printf("%d\t%d\n", getVdmElementClass(vdmElement), higherIndex(classes, set->classes));
+	printf("%d\t%d\n", vdmElement->class, higherIndex(classes, set->classes));
 	//printf("%d\t%d\t%d\n", getVdmElementClass(vdmElement), higherIndex(classes, set->classes), classes[higherIndex(classes, set->classes)]);
 }
 

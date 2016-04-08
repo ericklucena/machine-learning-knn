@@ -22,8 +22,8 @@ int main(int argc, char** argv)
 	sscanf(argv[6], "%d", &weight);
 
 	set = newVdmSet(nElem, nAttr, nClass);
-	//training = newVdmSet(nElem - nTest, nAttr, nClass);
-	//test = newVdmSet(nTest, nAttr, nClass);
+	training = newVdmSet(nElem - nTest, nAttr, nClass);
+	test = newVdmSet(nTest, nAttr, nClass);
 
 	for (i=0; i < set->size; i++)
 	{
@@ -34,13 +34,27 @@ int main(int argc, char** argv)
 			fscanf(stdin, "%d", &(elem->attributes[j]));
 		}
 		fscanf(stdin, "%d", &(elem->class));
-		printVdmElement(elem);
 
 		addVdmElement(set, elem, i);
 	}
-	calculateProbability(set);
 
-	printVdmSet(set);
+	for (i=0; i < set->size; i++)
+	{
+		if (i < training->size)
+		{
+			addVdmElement(training, set->elements[i], i);
+		}
+		else
+		{
+			addVdmElement(test, set->elements[i], i-training->size);
+		}
+	}
+	calculateProbability(training);
+
+	for (i = 0; i < test->size; i++)
+	{
+		vdmPrintClasses(training, test->elements[i], nNeighbours, weight);
+	}
 
 	return 0;
 }
