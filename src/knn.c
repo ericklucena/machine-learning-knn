@@ -17,7 +17,7 @@ int higherIndex(double *array, int size)
 {
 	int i;
 	int index=0;
-	int count = array[0];
+	double count = array[0];
 	
 	for (i = 1; i < size; i++)
 	{
